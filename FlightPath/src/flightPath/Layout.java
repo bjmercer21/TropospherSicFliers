@@ -6,18 +6,21 @@ import java.lang.Math;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 @SuppressWarnings("serial")
 public class Layout extends JFrame {
 
 	// this will be variable by the end, 10 is just a test number
-	int numOfNodes = 25;
+	static int numOfNodes = 25;
 	boolean foundWall;
-	private Cell[] cellBoard = new Cell[(int) Math.pow(numOfNodes, 2)];
-	ArrayList<Integer> masterNodeLocations = new ArrayList<>();
-	ArrayList<Integer> wallList = new ArrayList<>();
+	private Cell[][] cellBoard = new Cell[numOfNodes][numOfNodes];
+	ArrayList<Cell> wallList = new ArrayList<>();
+	Cell startCell = new Cell(0, 0);
+	Cell endCell = new Cell(numOfNodes - 1, numOfNodes - 1);
+	Cell nullCell = null;
+	
+//	Algorithms testAlg = new Algorighms();
 
 	public static void main(String[] args) {
 
@@ -35,44 +38,88 @@ public class Layout extends JFrame {
 		Container c = getContentPane();
 
 		// Adds numbers to a list to be used to determine walls
-		for (int x = 0; x < (int) (Math.pow(numOfNodes, 2)); x++) {
-			masterNodeLocations.add(x);
-		}
 
 		p.setLayout(new GridLayout(numOfNodes, numOfNodes));
-		masterWallList();
+
+		createWallList();
+		System.out.println(wallList);
+
+		for (int x = 0; x < numOfNodes; x++) {
+			for (int y = 0; y < numOfNodes; y++) {
+				Cell nextCell = new Cell(x, y);
+				if(nextCell.equals(nextCell,startCell)) {
+					nextCell.drawStart();
+				}
+				if(nextCell.equals(nextCell, endCell)) {
+					nextCell.drawEnd();
+				}
+
+				
+				nextCell.setNeighborUp(nextCell);
+				if(nextCell.getNeighborUp().getCoorY() == -1) {
+					nextCell.setBorder(true);
+				}
+				nextCell.setNeighborDown(nextCell);
+				nextCell.setNeighborLeft(nextCell);
+				nextCell.setNeighborRight(nextCell);
+				nextCell.setNeighborUpLeft(nextCell);
+				nextCell.setNeighborUpRight(nextCell);
+				nextCell.setNeighborDownLeft(nextCell);
+				nextCell.setNeighborDownRight(nextCell);
+
+				for (int z = 0; z < wallList.size(); z++) {
+					if (nextCell.equals(nextCell, wallList.get(z))) {
+						nextCell.setWall(true);
+						nextCell.drawWall();
+					}
+
+				}
+
+				cellBoard[x][y] = nextCell;
+				p.add(cellBoard[x][y]);
+		
+				// adds the cell to the flight layout
+				c.add(p);
+
+			}
+
+		}
+		
 		
 
-		for (int x = 0; x < (int) Math.pow(numOfNodes, 2); x++) {
-			Cell nextCell = new Cell(x);
+		System.out.println(cellBoard[0][0].getNeighborUp());
+		System.out.println(cellBoard[0][0].getIsBorder());
+		System.out.println(cellBoard[0][0].getNeighborUpLeft());
+		System.out.println(cellBoard[0][0].getNeighborUpRight());
+		System.out.println(cellBoard[0][0].getNeighborDown());
+		System.out.println(cellBoard[0][0].getNeighborDownLeft());
+		System.out.println(cellBoard[0][0].getNeighborDownRight());
+		System.out.println(cellBoard[0][0].getNeighborLeft());
+		System.out.println(cellBoard[0][0].getNeighborRight());
+		
 
-			if (wallList.contains(x)) {
-				nextCell.drawWall();
-			}
-			
-
-			cellBoard[x] = nextCell;
-			p.add(cellBoard[x]);
-
-			// adds the cell to the flight layout
-			c.add(p);
-		}
 		setVisible(true);
+
 	}
 
 	// Used to create a list of locations that will be walls
-	private void masterWallList() {
+	private void createWallList() {
 		Random rand = new Random();
-		int percentage = (int) (masterNodeLocations.size() * (float) .25);
-		ArrayList<Integer> temp = masterNodeLocations;
+
+		int percentage = (int) (Math.pow(numOfNodes, 2) * (float) .3);
 
 		for (int x = 0; x < percentage; x++) {
-			int wallNum = rand.nextInt(temp.size());
-			while (wallList.contains(wallNum) || wallNum == 0 || wallNum == temp.size()-1) {
-				wallNum = rand.nextInt(temp.size());
+			Cell wallCell = new Cell(rand.nextInt(numOfNodes), rand.nextInt(numOfNodes));
+			while (wallList.contains(wallCell) || wallCell.equals(wallCell, startCell)
+					|| wallCell.equals(wallCell, endCell)) {
+				wallCell = new Cell(rand.nextInt(numOfNodes), rand.nextInt(numOfNodes));
 			}
-			wallList.add(wallNum);
+			wallList.add(wallCell);
+
 		}
-		Collections.sort(wallList);
+	}
+
+	public static int getNumOfNodes() {
+		return numOfNodes;
 	}
 }
