@@ -1,108 +1,66 @@
 package flightPath;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
-import java.lang.Math;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import java.util.ArrayList;
 import java.util.Random;
+import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
 public class Layout extends JFrame {
-
-	// this will be variable by the end, 10 is just a test number
-	static int numOfNodes = 25;
-	boolean foundWall;
-	private Cell[][] cellBoard = new Cell[numOfNodes][numOfNodes];
-	ArrayList<Cell> wallList = new ArrayList<>();
-	Cell startCell = new Cell(0, 0);
-	Cell endCell = new Cell(numOfNodes - 1, numOfNodes - 1);
-	Cell nullCell = null;
 	
-//	Algorithms testAlg = new Algorighms();
 
-	public static void main(String[] args) {
+	public int x, y;
+	int numOfNodes;
+	ArrayList<Cell> wallList = new ArrayList<>();
 
-		new Layout();
-	}
+	public Layout(int x, int y) {
+		this.x = x;
+		this.y = y;
+		numOfNodes = x;
 
-	private JPanel p = new JPanel();
-
-	public Layout() {
-		setTitle("Flight Layout");
+		setTitle("Flight Path");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(700, 700);
 		setResizable(false);
 
-		Container c = getContentPane();
-
-		// Adds numbers to a list to be used to determine walls
-
-		p.setLayout(new GridLayout(numOfNodes, numOfNodes));
+		setSize(500, 500);
 
 		createWallList();
-		System.out.println(wallList);
 
-		for (int x = 0; x < numOfNodes; x++) {
-			for (int y = 0; y < numOfNodes; y++) {
-				Cell nextCell = new Cell(x, y);
-				if(nextCell.equals(nextCell,startCell)) {
-					nextCell.drawStart();
-				}
-				if(nextCell.equals(nextCell, endCell)) {
-					nextCell.drawEnd();
-				}
+		Container c = getContentPane();
+		c.setLayout(new GridLayout(x, y));
 
-				
-				nextCell.setNeighborUp(nextCell);
-				if(nextCell.getNeighborUp().getCoorY() == -1) {
-					nextCell.setBorder(true);
-				}
-				nextCell.setNeighborDown(nextCell);
-				nextCell.setNeighborLeft(nextCell);
-				nextCell.setNeighborRight(nextCell);
-				nextCell.setNeighborUpLeft(nextCell);
-				nextCell.setNeighborUpRight(nextCell);
-				nextCell.setNeighborDownLeft(nextCell);
-				nextCell.setNeighborDownRight(nextCell);
+		for (int i = 0; i < x; i++) {
+			for (int j = 0; j < y; j++) {
+
+				Cell newCell = new Cell(i, j);
 
 				for (int z = 0; z < wallList.size(); z++) {
-					if (nextCell.equals(nextCell, wallList.get(z))) {
-						nextCell.setWall(true);
-						nextCell.drawWall();
+					Cell testCell = wallList.get(z);
+					if (i == testCell.x && j == testCell.y) {
+						newCell.setWall(true);
+						newCell.changeColor(Color.black);
+						break;
 					}
-
 				}
 
-				cellBoard[x][y] = nextCell;
-				p.add(cellBoard[x][y]);
-		
-				// adds the cell to the flight layout
-				c.add(p);
+				if (newCell.x == 0 && newCell.y == 0) {
+					newCell.setWall(false);
+					newCell.changeColor(Color.green);
+				}
+				if (newCell.x == x - 1 && newCell.y == y - 1) {
+					newCell.setWall(false);
+					newCell.changeColor(Color.red);
+				}
 
+				c.add(newCell);
 			}
-
 		}
-		
-		
-
-		System.out.println(cellBoard[0][0].getNeighborUp());
-		System.out.println(cellBoard[0][0].getIsBorder());
-		System.out.println(cellBoard[0][0].getNeighborUpLeft());
-		System.out.println(cellBoard[0][0].getNeighborUpRight());
-		System.out.println(cellBoard[0][0].getNeighborDown());
-		System.out.println(cellBoard[0][0].getNeighborDownLeft());
-		System.out.println(cellBoard[0][0].getNeighborDownRight());
-		System.out.println(cellBoard[0][0].getNeighborLeft());
-		System.out.println(cellBoard[0][0].getNeighborRight());
-		
 
 		setVisible(true);
-
 	}
 
-	// Used to create a list of locations that will be walls
 	private void createWallList() {
 		Random rand = new Random();
 
@@ -110,8 +68,7 @@ public class Layout extends JFrame {
 
 		for (int x = 0; x < percentage; x++) {
 			Cell wallCell = new Cell(rand.nextInt(numOfNodes), rand.nextInt(numOfNodes));
-			while (wallList.contains(wallCell) || wallCell.equals(wallCell, startCell)
-					|| wallCell.equals(wallCell, endCell)) {
+			while (wallList.contains(wallCell)) {
 				wallCell = new Cell(rand.nextInt(numOfNodes), rand.nextInt(numOfNodes));
 			}
 			wallList.add(wallCell);
@@ -119,7 +76,4 @@ public class Layout extends JFrame {
 		}
 	}
 
-	public static int getNumOfNodes() {
-		return numOfNodes;
-	}
 }
