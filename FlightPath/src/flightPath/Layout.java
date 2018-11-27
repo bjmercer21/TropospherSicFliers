@@ -9,11 +9,11 @@ import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
 public class Layout extends JFrame {
-	
 
-	public int x, y;
-	int numOfNodes;
-	ArrayList<Cell> wallList = new ArrayList<>();
+	private int x, y;
+	Container c = getContentPane();
+	private int numOfNodes;
+	public ArrayList<Cell> wallList = new ArrayList<>();
 
 	public Layout(int x, int y) {
 		this.x = x;
@@ -28,13 +28,15 @@ public class Layout extends JFrame {
 
 		createWallList();
 
-		Container c = getContentPane();
+		
 		c.setLayout(new GridLayout(x, y));
+
+		Cell newCell;
 
 		for (int i = 0; i < x; i++) {
 			for (int j = 0; j < y; j++) {
 
-				Cell newCell = new Cell(i, j);
+				newCell = new Cell(i,j);
 
 				for (int z = 0; z < wallList.size(); z++) {
 					Cell testCell = wallList.get(z);
@@ -53,8 +55,44 @@ public class Layout extends JFrame {
 					newCell.setWall(false);
 					newCell.changeColor(Color.red);
 				}
-
 				c.add(newCell);
+			}
+			
+			
+			
+		}
+
+		//Sets up the neighbors
+		for (int i = 0; i < x; i++) {
+			for (int j = 0; j < y; j++) {
+				ArrayList<Cell> neighbors = new ArrayList<>();
+					if(getCell(i, j).x+1 < numOfNodes){
+						neighbors.add(getCell(i+1,j));
+					}
+					if(getCell(i, j).x-1 >= 0){
+						neighbors.add(getCell(i-1, j));
+					}
+					if(getCell(i, j).y+1 < numOfNodes){
+						neighbors.add(getCell(i, j+1));
+					}
+					if(getCell(i, j).y-1 >= 0){
+						neighbors.add(getCell(i, j-1));
+					}
+
+					//Start Diagonals
+					// if(getCell(i, j).x+1 < numOfNodes && getCell(i, j).y+1 < numOfNodes){
+					// 	neighbors.add(getCell(i+1,j+1));
+					// }
+					// if(getCell(i, j).x-1 >= 0 && getCell(i, j).y+1  >= 0){
+					// 	neighbors.add(getCell(i-1, j+1));
+					// }
+					// if(getCell(i, j).x+1 < numOfNodes && getCell(i, j).y-1 < numOfNodes){
+					// 	neighbors.add(getCell(i+1, j-1));
+					// }
+					// if(getCell(i, j).x-1 >= 0 && getCell(i, j).y-1 >= 0){
+					// 	neighbors.add(getCell(i-1, j-1));
+					// }
+					getCell(i, j).setNeighbors(neighbors);
 			}
 		}
 
@@ -75,5 +113,24 @@ public class Layout extends JFrame {
 
 		}
 	}
+
+	public int getX(int x){
+		return this.x = x;
+	}
+
+	public int getY(int y){
+		return this.y = y;
+	}
+
+	public Cell getCell(int x, int y){
+		Cell thisCell = (Cell) c.getComponent((x*numOfNodes)+y);
+		return thisCell;
+	}
+
+	public int getSizeOfBoard(){
+		return numOfNodes;
+	}
+
+	
 
 }

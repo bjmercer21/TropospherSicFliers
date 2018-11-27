@@ -2,6 +2,8 @@ package flightPath;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 
@@ -12,9 +14,11 @@ public class Cell extends JButton {
 	public Cell parent;
 	public int hValue;
 	public int fValue;
+	public int gValue;
 	public boolean solution;
 	private Color defaultColor = Color.white;
 	private boolean isWall;
+	private ArrayList<Cell> neighbors = new ArrayList<>();
 
 	public void changeColor(Color c) {
 		setBackground(c);
@@ -47,5 +51,13 @@ public class Cell extends JButton {
 
 	public String toString() {
 		return "[" + x + "," + y + "]";
+	}
+
+	public void setNeighbors(ArrayList<Cell> neighbors){
+		this.neighbors = neighbors;
+	}
+
+	public ArrayList<Cell> getNeighbors(){
+		return neighbors;
 	}
 }
