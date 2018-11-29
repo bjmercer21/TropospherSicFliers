@@ -2,7 +2,6 @@ package flightPath;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class DepthFirst
@@ -20,26 +19,58 @@ public class DepthFirst
     {
         this.board = board;
         startCell = board.getCell(0, 0);
-        endCell = board.getCell(board.getSizeOfBoard()-1, board.getSizeOfBoard()-1);
+        //endCell = board.getCell(board.getSizeOfBoard()-1, board.getSizeOfBoard()-1);
         
         open.add(startCell);
         current = open.get(0);
         
+        searchPath(board, current, open);
+    } 
+    
+    public boolean searchPath(Layout board, Cell cell, ArrayList<Cell> path)
+    {
+        if (cell == board.getCell(board.getSizeOfBoard() - 1, board.getSizeOfBoard() - 1))
+        {
+            path.add(cell);
+            return true;
+        }
         
-        for(int i = 0; i < board.getSizeOfBoard(); i++){
-            for (int j = 0; j < board.getSizeOfBoard(); j++ ){
-                tmp = board.getCell(i, j);
-                if (!tmp.isWall())
-                {
-                    
-                }
+        if (!cell.isWall())
+        {
+            cell.changeColor(Color.BLUE);
+            
+            int dx = -1;
+            int dy = 0;
+            if (searchPath(board, board.getCell(cell.getX() + dx, cell.getY() + dy), path))
+            {
+                path.add(board.getCell(cell.getX() + dx, cell.getY() + dy));
+                return true;
+            }
+            
+            dx = 1;
+            dy = 0;
+            if (searchPath(board, board.getCell(cell.getX() + dx, cell.getY() + dy), path))
+            {
+                path.add(board.getCell(cell.getX() + dx, cell.getY() + dy));
+                return true;
+            }
+            
+            dx = 0;
+            dy = -1;
+            if (searchPath(board, board.getCell(cell.getX() + dx, cell.getY() + dy), path))
+            {
+                path.add(board.getCell(cell.getX() + dx, cell.getY() + dy));
+                return true;
+            }
+            
+            dx = 1;
+            dy = 1;
+            if (searchPath(board, board.getCell(cell.getX() + dx, cell.getY() + dy), path))
+            {
+                path.add(board.getCell(cell.getX() + dx, cell.getY() + dy));
+                return true;
             }
         }
-    }
-    
-    public static boolean searchPath (Layout board, List<Integer> path)
-    {
-        
         return false;
     }
 }
