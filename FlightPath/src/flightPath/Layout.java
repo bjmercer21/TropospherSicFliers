@@ -22,7 +22,7 @@ public class Layout extends JFrame {
 
 		setTitle("Flight Path");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(false);
+		setResizable(true);
 
 		setSize(500, 500);
 
@@ -66,32 +66,36 @@ public class Layout extends JFrame {
 		for (int i = 0; i < x; i++) {
 			for (int j = 0; j < y; j++) {
 				ArrayList<Cell> neighbors = new ArrayList<>();
-					if(getCell(i, j).x+1 < numOfNodes){
-						neighbors.add(getCell(i+1,j));
-					}
-					if(getCell(i, j).x-1 >= 0){
-						neighbors.add(getCell(i-1, j));
-					}
-					if(getCell(i, j).y+1 < numOfNodes){
-						neighbors.add(getCell(i, j+1));
-					}
-					if(getCell(i, j).y-1 >= 0){
-						neighbors.add(getCell(i, j-1));
-					}
+				
+				if(getCell(i, j).x-1 >= 0){
+					neighbors.add(getCell(i-1, j));
+				}
+				if(getCell(i, j).y-1 >= 0){
+					neighbors.add(getCell(i, j-1));
+				}
+				if(getCell(i, j).x+1 < numOfNodes){
+					neighbors.add(getCell(i+1,j));
+				}
+				if(getCell(i, j).y+1 < numOfNodes){
+					neighbors.add(getCell(i, j+1));
+				}
+				
+					
+					
 
 					//Start Diagonals
-					// if(getCell(i, j).x+1 < numOfNodes && getCell(i, j).y+1 < numOfNodes){
-					// 	neighbors.add(getCell(i+1,j+1));
-					// }
-					// if(getCell(i, j).x-1 >= 0 && getCell(i, j).y+1  >= 0){
-					// 	neighbors.add(getCell(i-1, j+1));
-					// }
-					// if(getCell(i, j).x+1 < numOfNodes && getCell(i, j).y-1 < numOfNodes){
-					// 	neighbors.add(getCell(i+1, j-1));
-					// }
-					// if(getCell(i, j).x-1 >= 0 && getCell(i, j).y-1 >= 0){
-					// 	neighbors.add(getCell(i-1, j-1));
-					// }
+					if(getCell(i, j).x+1 < numOfNodes && getCell(i, j).y+1 < numOfNodes){
+						neighbors.add(getCell(i+1,j+1));
+					}
+					if(getCell(i, j).x-1 > 0 && getCell(i, j).y+1  < numOfNodes){
+						neighbors.add(getCell(i-1, j+1));
+					}
+					if(getCell(i, j).x+1 < numOfNodes && getCell(i, j).y-1 > 0){
+						neighbors.add(getCell(i+1, j-1));
+					}
+					if(getCell(i, j).x-1 > 0 && getCell(i, j).y-1 > 0){
+						neighbors.add(getCell(i-1, j-1));
+					}
 					getCell(i, j).setNeighbors(neighbors);
 			}
 		}

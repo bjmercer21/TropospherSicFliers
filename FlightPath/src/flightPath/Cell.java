@@ -13,8 +13,8 @@ public class Cell extends JButton {
 	public int x, y;
 	public Cell parent;
 	public int hValue;
-	public int fValue;
 	public int gValue;
+	public int fValue;
 	public boolean solution;
 	private Color defaultColor = Color.white;
 	private boolean isWall;
@@ -32,6 +32,7 @@ public class Cell extends JButton {
 		changeColor(defaultColor);
 		setWall(false);
 		setPreferredSize(new Dimension(50, 50));
+		fValue = hValue + gValue;
 	}
 
 	/**
