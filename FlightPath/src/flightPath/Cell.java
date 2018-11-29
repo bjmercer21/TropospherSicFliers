@@ -15,6 +15,7 @@ public class Cell extends JButton {
 	public int hValue;
 	public int gValue;
 	public int fValue;
+	private boolean isVisited = false;
 	public boolean solution;
 	private Color defaultColor = Color.white;
 	private boolean isWall;
@@ -25,6 +26,20 @@ public class Cell extends JButton {
 		repaint();
 	}
 
+	/**
+	 * @return the isVisited
+	 */
+	public boolean isVisited() {
+		return isVisited;
+	}
+
+	/**
+	 * @param isVisited the isVisited to set
+	 */
+	public void setVisited(boolean isVisited) {
+		this.isVisited = isVisited;
+	}
+
 	public Cell(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -33,6 +48,7 @@ public class Cell extends JButton {
 		setWall(false);
 		setPreferredSize(new Dimension(50, 50));
 		fValue = hValue + gValue;
+		
 	}
 
 	/**
@@ -61,4 +77,6 @@ public class Cell extends JButton {
 	public ArrayList<Cell> getNeighbors(){
 		return neighbors;
 	}
+
+
 }
