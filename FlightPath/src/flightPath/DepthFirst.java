@@ -2,75 +2,74 @@ package flightPath;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.function.Consumer;
 
 
 public class DepthFirst
 {
     private Layout board;
-    Cell endCell;
-    Cell startCell;
-    Cell current;
-    Cell tmp;
-    ArrayList<Cell> open = new ArrayList<>();
-    ArrayList<Cell> closed = new ArrayList<>();
-    ArrayList<Cell> totalPath = new ArrayList<>();
     
     public DepthFirst (Layout board)
     {
         this.board = board;
-        startCell = board.getCell(0, 0);
-        //endCell = board.getCell(board.getSizeOfBoard()-1, board.getSizeOfBoard()-1);
-        
-        open.add(startCell);
-        current = open.get(0);
-        
-        searchPath(board, current, open);
-    } 
+	Cell startCell = board.getCell(0, 0);
+	Cell endCell = board.getCell(board.getSizeOfBoard()-1, board.getSizeOfBoard()-1);
+	DFS(startCell, endCell);
+    }
     
-    public boolean searchPath(Layout board, Cell cell, ArrayList<Cell> path)
+    void DFS(Cell startCell, Cell endCell)
     {
-        if (cell == board.getCell(board.getSizeOfBoard() - 1, board.getSizeOfBoard() - 1))
-        {
-            path.add(cell);
-            return true;
-        }
+        startCell.setVisited(true);
+        ArrayList<Cell> unvisited = new ArrayList<>();
+	ArrayList<Cell> visited = new ArrayList<>();
+	unvisited.add(startCell);
         
-        if (!cell.isWall())
+        while(unvisited.size() > 0)
         {
-            cell.changeColor(Color.BLUE);
-            
-            int dx = -1;
-            int dy = 0;
-            if (searchPath(board, board.getCell(cell.getX() + dx, cell.getY() + dy), path))
+            Cell cell = unvisited.remove(0);
+            if(cell == endCell)
             {
-                path.add(board.getCell(cell.getX() + dx, cell.getY() + dy));
-                return true;
+                Cell v = endCell;
+                while(v != startCell)
+                {
+                    v.setBackground(Color.yellow);
+                    v = v.parent;
+                }
+                return;
             }
             
-            dx = 1;
-            dy = 0;
-            if (searchPath(board, board.getCell(cell.getX() + dx, cell.getY() + dy), path))
+            if (cell.getNeighbors() == null)
             {
-                path.add(board.getCell(cell.getX() + dx, cell.getY() + dy));
-                return true;
+                visited.remove(cell);
             }
-            
-            dx = 0;
-            dy = -1;
-            if (searchPath(board, board.getCell(cell.getX() + dx, cell.getY() + dy), path))
+            else
             {
-                path.add(board.getCell(cell.getX() + dx, cell.getY() + dy));
-                return true;
+                visited.add(cell);
+                Collections.shuffle(cell.getNeighbors());
+                for(Cell neighbor: cell.getNeighbors())
+                {
+                    if (!visited.contains(neighbor) && !unvisited.contains(neighbor)) 
+                    {
+                        if (!neighbor.isWall())
+                        {
+                            neighbor.parent = cell;
+                            unvisited.add(neighbor);
+                            neighbor.setBackground(Color.pink);
+                            try
+                            {
+                                Thread.sleep(50);
+                            }
+                            catch (InterruptedException e)
+                            {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
             }
-            
-            dx = 1;
-            dy = 1;
-            if (searchPath(board, board.getCell(cell.getX() + dx, cell.getY() + dy), path))
-            {
-                path.add(board.getCell(cell.getX() + dx, cell.getY() + dy));
-                return true;
-            }
-        }
-        return false;
+        }	
     }
 }
