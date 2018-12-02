@@ -106,7 +106,7 @@ public class Layout extends JFrame {
 	private void createWallList() {
 		Random rand = new Random();
 
-		int percentage = (int) (Math.pow(numOfNodes, 2) * (float) .3);
+		int percentage = (int) (Math.pow(numOfNodes, 2) * (float) .5);
 
 		for (int x = 0; x < percentage; x++) {
 			Cell wallCell = new Cell(rand.nextInt(numOfNodes), rand.nextInt(numOfNodes));
